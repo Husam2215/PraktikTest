@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using PraktikÖvning.Database;
 using PraktikÖvning.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -15,11 +16,13 @@ namespace PraktikÖvning.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly AppDbContext _context;
 
-        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, AppDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
         }
 
         [HttpPost("register")]
@@ -90,6 +93,7 @@ namespace PraktikÖvning.Controllers
                 return Unauthorized(new { message = "User not authenticated" });
             }
 
+            // Hämta användaren
             var user = await _userManager.FindByIdAsync(userId);
 
             if (user == null)
@@ -97,6 +101,17 @@ namespace PraktikÖvning.Controllers
                 return NotFound(new { message = "User not found" });
             }
 
+            // Hämta alla barn kopplade till användaren
+            var children = _context.Children.Where(c => c.UserId == userId).ToList();
+
+            // Ta bort barnen om de finns
+            if (children.Any())
+            {
+                _context.Children.RemoveRange(children);
+                await _context.SaveChangesAsync(); // Spara ändringarna
+            }
+
+            // Ta bort användaren
             var result = await _userManager.DeleteAsync(user);
 
             if (result.Succeeded)
@@ -106,7 +121,6 @@ namespace PraktikÖvning.Controllers
 
             return BadRequest(result.Errors);
         }
-
 
     }
 
