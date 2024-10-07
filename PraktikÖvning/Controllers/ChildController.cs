@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PraktikÖvning.Database;
 using PraktikÖvning.Models;
+using System.Security.Claims;
 
 namespace PraktikÖvning.Controllers
 {
@@ -39,5 +41,38 @@ namespace PraktikÖvning.Controllers
 
             return Ok(new { message = "Child added successfully", childId = model.Id });
         }
+
+        [HttpDelete("deleteChild/{childId}")]
+        [Authorize] // Se till att denna metod kräver autentisering
+        public async Task<IActionResult> DeleteChild(int childId)
+        {
+            // Hämta användar-ID från den autentiserade användaren
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(new { message = "User not authenticated" });
+            }
+
+            // Hitta barnet i databasen
+            var child = await _context.Children.FirstOrDefaultAsync(c => c.Id == childId);
+
+            if (child == null)
+            {
+                return NotFound(new { message = "Child not found" });
+            }
+
+            if (child.UserId != userId) // Kontrollera att barnet är kopplat till den inloggade användaren
+            {
+                // Använd StatusCode för att ange en 403 Forbidden
+                return StatusCode(403, new { message = "You don't have the right to delete that child" });
+            }
+
+            _context.Children.Remove(child);
+            await _context.SaveChangesAsync(); // Använd async för att undvika blockering
+
+            return Ok(new { message = "Child deleted successfully" });
+        }
+
     }
 }
