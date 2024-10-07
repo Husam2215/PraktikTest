@@ -106,7 +106,7 @@ namespace PraktikÖvning.Controllers
 
             return BadRequest(result.Errors);
         }
-        //shit
+
 
     }
 
