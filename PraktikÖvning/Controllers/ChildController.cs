@@ -12,8 +12,9 @@ namespace PraktikÖvning.Controllers
     public class ChildController : ControllerBase
     {
         private readonly AppDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
-        public ChildController(AppDbContext context, UserManager<IdentityUser> userManager)
+        private readonly UserManager<User> _userManager;
+
+        public ChildController(AppDbContext context, UserManager<User> userManager)
         {
             _context = context;
             _userManager = userManager;
@@ -22,23 +23,21 @@ namespace PraktikÖvning.Controllers
         [HttpPost("add-child")]
         public async Task<IActionResult> AddChild([FromBody] Child model)
         {
-            // Kontrollerar om användaren är autentiserad
+            // Check if the user is authenticated
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return Unauthorized();
+                return Unauthorized(new { message = "User is not authenticated" });
             }
 
-            // Sätt UserId från den autentiserade användaren
+            // Assign the current user's ID to the Child model
             model.UserId = user.Id;
 
-            // Lägg till barnet i databasen
+            // Add the child to the database
             _context.Children.Add(model);
-            await _context.SaveChangesAsync(); // Glöm inte att spara ändringarna i databasen
+            await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Child added successfully" });
+            return Ok(new { message = "Child added successfully", childId = model.Id });
         }
-
-
     }
 }
