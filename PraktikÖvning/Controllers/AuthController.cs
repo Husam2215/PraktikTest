@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using PraktikÖvning.Models;
@@ -76,6 +77,37 @@ namespace PraktikÖvning.Controllers
 
             return BadRequest(new { message = "Invalid login attempt. Incorrect password or user is locked out." });
         }
+
+        [HttpDelete("deleteUser")]
+        [Authorize] // Se till att denna metod kräver autentisering
+        public async Task<IActionResult> DeleteUser()
+        {
+            // Hämta användar-ID från den autentiserade användaren
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(new { message = "User not authenticated" });
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found" });
+            }
+
+            var result = await _userManager.DeleteAsync(user);
+
+            if (result.Succeeded)
+            {
+                return Ok(new { message = "User deleted successfully" });
+            }
+
+            return BadRequest(result.Errors);
+        }
+
+
     }
 
     // DTO's
