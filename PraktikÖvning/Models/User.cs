@@ -4,6 +4,6 @@ namespace PraktikÖvning.Models
 {
     public class User : IdentityUser
     {
-        //public List<Child> Childern { get; set; }
+        public ICollection<Child> Children { get; set; } = new List<Child>();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using PraktikÖvning.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -11,10 +12,10 @@ namespace PraktikÖvning.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
 
-        public AuthController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -23,7 +24,7 @@ namespace PraktikÖvning.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
-            var user = new IdentityUser { UserName = model.UserName, Email = model.Email };
+            var user = new User { UserName = model.UserName, Email = model.Email };
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
@@ -36,7 +37,7 @@ namespace PraktikÖvning.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            // Kontrollera om användaren finns
+            // Check if the user exists
             var user = await _userManager.FindByNameAsync(model.UserName);
 
             if (user == null)
@@ -44,32 +45,32 @@ namespace PraktikÖvning.Controllers
                 return BadRequest(new { message = "Invalid login attempt. User not found." });
             }
 
-            // Försök att logga in användaren
+            // Try to log the user in
             var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, isPersistent: false, lockoutOnFailure: false);
 
             if (result.Succeeded)
             {
-                // Generera JWT-token
+                // Generate JWT token
                 var claims = new[]
                 {
-                    new Claim(JwtRegisteredClaimNames.Sub, model.UserName),
+                    new Claim(JwtRegisteredClaimNames.Sub, user.Id),  // Use user ID as the subject
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 };
 
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ThisIsMySuperSecretKeyThatIs32BytesLong!!")); // Byt ut mot den nyckel du har i appsettings.json
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ThisIsMySuperSecretKeyThatIs32BytesLong!!")); // Match with appsettings.json key
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
                 var token = new JwtSecurityToken(
-                    issuer: "YourIssuer", // Byt ut mot den utgivare du har i appsettings.json
-                    audience: "YourAudience", // Byt ut mot den målgrupp du har i appsettings.json
+                    issuer: "YourIssuer", // Match with appsettings.json issuer
+                    audience: "YourAudience", // Match with appsettings.json audience
                     claims: claims,
-                    expires: DateTime.Now.AddMinutes(30), // Ställ in tokenets utgångstid
+                    expires: DateTime.Now.AddMinutes(30),
                     signingCredentials: creds);
 
                 return Ok(new
                 {
                     message = "Login successful",
-                    token = new JwtSecurityTokenHandler().WriteToken(token) // Generera token som en sträng
+                    token = new JwtSecurityTokenHandler().WriteToken(token) // Return JWT as string
                 });
             }
 
@@ -77,17 +78,17 @@ namespace PraktikÖvning.Controllers
         }
     }
 
+    // DTO's
     public class RegisterModel
     {
-        public string UserName { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
+        public required string UserName { get; set; }
+        public required string Email { get; set; }
+        public required string Password { get; set; }
     }
 
     public class LoginModel
     {
-        public string UserName { get; set; }
-        public string Password { get; set; }
+        public required string UserName { get; set; }
+        public required string Password { get; set; }
     }
 }
-

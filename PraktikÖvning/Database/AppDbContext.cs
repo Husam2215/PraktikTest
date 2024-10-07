@@ -5,7 +5,7 @@ using PraktikÖvning.Models;
 
 namespace PraktikÖvning.Database
 {
-    public class AppDbContext : IdentityDbContext<IdentityUser>
+    public class AppDbContext : IdentityDbContext<User>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -17,8 +17,9 @@ namespace PraktikÖvning.Database
 
             builder.Entity<Child>()
                 .HasOne(c => c.User)
-                .WithMany()
-                .HasForeignKey(c => c.UserId);
+                .WithMany(u => u.Children)
+                .HasForeignKey(c => c.UserId)
+                .IsRequired(false);
 
         }
         public DbSet<Child> Children { get; set; }
