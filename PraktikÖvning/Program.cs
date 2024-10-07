@@ -36,14 +36,27 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Add authorization service
 builder.Services.AddAuthorization();
 
+// Add Swagger services
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// Add controllers
 builder.Services.AddControllers();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+    });
+}
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication(); // Use authentication middleware
@@ -52,3 +65,4 @@ app.UseAuthorization(); // Use authorization middleware
 app.MapControllers();
 
 app.Run();
+
