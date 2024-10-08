@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PraktikÖvning.Database;
-using PraktikÖvning.Models;
+using WiseKidBackend.Database;
+using WiseKidBackend.Models;
 using System.Security.Claims;
 
-namespace PraktikÖvning.Controllers
+namespace WiseKidBackend.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]

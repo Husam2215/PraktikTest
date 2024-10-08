@@ -2,8 +2,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Praktik÷vning.Database;
-using Praktik÷vning.Models;
+using WiseKidBackend.Database;
+using WiseKidBackend.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);

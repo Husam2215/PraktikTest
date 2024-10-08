@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace PraktikÖvning.Models
+namespace WiseKidBackend.Models
 {
     public class User : IdentityUser
     {

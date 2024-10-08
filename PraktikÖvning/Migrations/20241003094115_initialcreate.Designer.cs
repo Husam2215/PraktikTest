@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using PraktikÖvning.Database;
+using WiseKidBackend.Database;
 
 #nullable disable
 
-namespace PraktikÖvning.Migrations
+namespace WiseKidBackend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20241003094115_initialcreate")]
@@ -223,7 +223,7 @@ namespace PraktikÖvning.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("PraktikÖvning.Models.Child", b =>
+            modelBuilder.Entity("WiseKidBackend.Models.Child", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -296,7 +296,7 @@ namespace PraktikÖvning.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PraktikÖvning.Models.Child", b =>
+            modelBuilder.Entity("WiseKidBackend.Models.Child", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()

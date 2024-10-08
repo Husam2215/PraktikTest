@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace PraktikÖvning.Models
+namespace WiseKidBackend.Models
 {
     public class Child
     {

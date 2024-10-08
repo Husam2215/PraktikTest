@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace PraktikÖvning.Migrations
+namespace WiseKidBackend.Migrations
 {
     /// <inheritdoc />
     public partial class NewMigration : Migration

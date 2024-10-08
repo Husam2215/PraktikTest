@@ -1,6 +1,6 @@
-@PraktikÖvning_HostAddress = http://localhost:5025
+@WiseKidBackend_HostAddress = http://localhost:5025
 
-GET {{PraktikÖvning_HostAddress}}/weatherforecast/
+GET {{WiseKidBackend_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###

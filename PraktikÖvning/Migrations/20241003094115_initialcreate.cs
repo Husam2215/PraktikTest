@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace PraktikÖvning.Migrations
+namespace WiseKidBackend.Migrations
 {
     /// <inheritdoc />
     public partial class initialcreate : Migration
