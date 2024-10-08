@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using PraktikÖvning.Models;
+using WiseKidBackend.Models;
 
-namespace PraktikÖvning.Database
+namespace WiseKidBackend.Database
 {
     public class AppDbContext : IdentityDbContext<User>
     {

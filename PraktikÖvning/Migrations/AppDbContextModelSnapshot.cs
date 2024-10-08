@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using PraktikÖvning.Database;
+using WiseKidBackend.Database;
 
 #nullable disable
 
-namespace PraktikÖvning.Migrations
+namespace WiseKidBackend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
@@ -155,7 +155,7 @@ namespace PraktikÖvning.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("PraktikÖvning.Models.Child", b =>
+            modelBuilder.Entity("WiseKidBackend.Models.Child", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -178,7 +178,7 @@ namespace PraktikÖvning.Migrations
                     b.ToTable("Children");
                 });
 
-            modelBuilder.Entity("PraktikÖvning.Models.User", b =>
+            modelBuilder.Entity("WiseKidBackend.Models.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -254,7 +254,7 @@ namespace PraktikÖvning.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("PraktikÖvning.Models.User", null)
+                    b.HasOne("WiseKidBackend.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -263,7 +263,7 @@ namespace PraktikÖvning.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("PraktikÖvning.Models.User", null)
+                    b.HasOne("WiseKidBackend.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -278,7 +278,7 @@ namespace PraktikÖvning.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PraktikÖvning.Models.User", null)
+                    b.HasOne("WiseKidBackend.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -287,23 +287,23 @@ namespace PraktikÖvning.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("PraktikÖvning.Models.User", null)
+                    b.HasOne("WiseKidBackend.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PraktikÖvning.Models.Child", b =>
+            modelBuilder.Entity("WiseKidBackend.Models.Child", b =>
                 {
-                    b.HasOne("PraktikÖvning.Models.User", "User")
+                    b.HasOne("WiseKidBackend.Models.User", "User")
                         .WithMany("Children")
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("PraktikÖvning.Models.User", b =>
+            modelBuilder.Entity("WiseKidBackend.Models.User", b =>
                 {
                     b.Navigation("Children");
                 });
